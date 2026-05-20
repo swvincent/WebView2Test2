@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -17,9 +16,9 @@ public partial class MainWindow : Window
 
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
-    private enum ThemeMode { Auto, Light, Dark }
+    private enum LightDarkMode { Auto, Light, Dark }
 
-    private ThemeMode _currentTheme = ThemeMode.Auto;
+    private LightDarkMode _currentTheme = LightDarkMode.Auto;
 
     public MainWindow()
     {
@@ -42,20 +41,20 @@ public partial class MainWindow : Window
         {
             _currentTheme = item.Tag?.ToString() switch
             {
-                "Light" => ThemeMode.Light,
-                "Dark"  => ThemeMode.Dark,
-                _       => ThemeMode.Auto
+                "Light" => LightDarkMode.Light,
+                "Dark"  => LightDarkMode.Dark,
+                _       => LightDarkMode.Auto
             };
             ApplyTheme(_currentTheme);
         }
     }
 
-    private void ApplyTheme(ThemeMode theme)
+    private void ApplyTheme(LightDarkMode theme)
     {
         bool isDark = theme switch
         {
-            ThemeMode.Dark  => true,
-            ThemeMode.Light => false,
+            LightDarkMode.Dark  => true,
+            LightDarkMode.Light => false,
             _               => IsSystemDarkMode()
         };
 
@@ -90,14 +89,14 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ApplyWebViewTheme(ThemeMode theme)
+    private void ApplyWebViewTheme(LightDarkMode theme)
     {
         if (webView?.CoreWebView2 == null) return;
 
         webView.CoreWebView2.Profile.PreferredColorScheme = theme switch
         {
-            ThemeMode.Dark  => CoreWebView2PreferredColorScheme.Dark,
-            ThemeMode.Light => CoreWebView2PreferredColorScheme.Light,
+            LightDarkMode.Dark  => CoreWebView2PreferredColorScheme.Dark,
+            LightDarkMode.Light => CoreWebView2PreferredColorScheme.Light,
             _               => CoreWebView2PreferredColorScheme.Auto
         };
     }
